@@ -22,6 +22,8 @@ npm i -D posthtml-responsive-images
 
 ### Configuration
 
+`.posthtmlrc`:
+
 ```json
 {
   "plugins": {
@@ -66,19 +68,21 @@ npm i -D posthtml-responsive-images
 
 ### Global
 
-| Option           | Type                     | Description                                                                |
-|------------------|--------------------------|----------------------------------------------------------------------------|
-| `urlFormat`      | `string`                 | Format string for generated URLs, see below for details.                   |
-| `presets`        | `Record<string, Preset>` | See next section.                                                          |
+| Option         | Type                     | Description                                                                       |
+|----------------|--------------------------|-----------------------------------------------------------------------------------|
+| `urlFormat`    | `string`                 | Format string for generated URLs, see below for details.                          |
+| `srcUrlFormat` | `string`                 | Format string for adjusted `src`, see below for details. Defaults to `urlFormat`. |
+| `presets`      | `Record<string, Preset>` | See next section.                                                                 |
 
 ### Presets
 
-| Option          | Type                                                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-|-----------------|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `sources`       | `number[]`                                                       | An array of source sizes in ascending order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
-| `sizes`         | `([number, string &vert; number] &vert; string &vert; number)[]` | CSS sizes the image can have. If this is omitted, the `sizes` attribute will not be generated. All but the last entry should be a `[number, string &vert; number]` tuple, where the first element represents the `min-width` of the viewport for the size to apply. The last entry is the default size. A size specified as a `number` will be suffixed with `px`. A size string which contains any of the characters `-+*/()` and doesn't begin with `calc`, `clamp`, `max` or `min` will be wrapped in a `calc()`. |
-| `aspectRatio`   | `string &vert; number`                                           | Optional aspect ratio. If not specified, it will be calculated from the image `width` and `height` attributes. If this _is_ specified, the `height` parameter of the generated URLs will be computed from the respective `width` using this aspect ratio. Can be specified as a fractional number (e.g. `0.5625` for 16:9) or a string formatted as either `W:H` or `WxH`.                                                                                                                                           |
-| `urlFormat`     | `string`                                                         | Optional preset-specific override for the global `urlFormat` option.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| Option         | Type                                                             | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
+|----------------|------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `sources`      | `number[]`                                                       | An array of source sizes in ascending order.                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| `sizes`        | `([number, string &vert; number] &vert; string &vert; number)[]` | CSS sizes the image can have. If this is omitted, the `sizes` attribute will not be generated. All but the last entry should be a `[number, string &vert; number]` tuple, where the first element represents the `min-width` of the viewport for the size to apply. The last entry is the default size. A size specified as a `number` will be suffixed with `px`. A size string which contains any of the characters `-+*/()` and doesn't begin with `calc`, `clamp`, `max` or `min` will be wrapped in a `calc()`. |
+| `aspectRatio`  | `string &vert; number`                                           | Optional aspect ratio. If not specified, it will be calculated from the image `width` and `height` attributes. If this _is_ specified, the `height` parameter of the generated URLs will be computed from the respective `width` using this aspect ratio. Can be specified as a fractional number (e.g. `0.5625` for 16:9) or a string formatted as either `W:H` or `WxH`.                                                                                                                                           |
+| `urlFormat`    | `string`                                                         | Optional preset-specific override for the global `urlFormat` option.                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| `srcUrlFormat` | `string`                                                         | Optional preset-specific override for the global `srcUrlFormat` option.                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 
 
 ## Generated output
@@ -94,8 +98,21 @@ that, and browsers which don't support `srcset` and `sizes` will gracefully fall
 back to the best resolution which should be needed for that particular image,
 no matter the source resolution.
 
+The `urlFormat` and `srcUrlFormat` strings should include placeholders which will
+be replaced with the appropriate values. The available placeholders are:
+
+| Placeholder  | Value                                                                                                                                        |
+|--------------|----------------------------------------------------------------------------------------------------------------------------------------------|
+| `{baseurl}`  | The base URL of the image, that is, everything up to and including the last `/` character in the original image URL, e.g. `/images/thumbs/`. |
+| `{filename}` | The original image file name and extension, e.g. `my-pretty-face.jpg`.                                                                       |
+| `{basename}` | The original image file name without extension, e.g. `my-pretty-face`.                                                                       |
+| `{ext}`      | The original image extension, e.g. `jpg`.                                                                                                    |
+| `{width}`    | The width of the image at the requested size.                                                                                                |
+| `{height}`   | The height of the image at the requested size.                                                                                               |
+
 
 ## Programmatic usage
 
-The plugin exports the core methods, so if you have some special use-case which
-the plugin doesn't cover, you should be able to create your own plugin easily enough.
+The plugin exports the core `processImage` method, so if you have some special use-case
+which the plugin doesn't cover, you should be able to create your own plugin easily enough.
+The method accepts a PostHTML AST node as the first argument

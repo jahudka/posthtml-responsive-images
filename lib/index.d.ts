@@ -5,26 +5,26 @@ export declare type ResponsiveImagePreset = {
   sizes?: ResponsiveImageSize[];
   aspectRatio?: number | string;
   urlFormat?: string;
+  srcUrlFormat?: string;
 };
 
 export declare type ResponsiveImagesOptions = {
   urlFormat?: string;
+  srcUrlFormat?: string;
   presets: Record<string, ResponsiveImagePreset>;
 };
 
-export declare type PostHTMLASTNode = {
-  tag?: string;
-  attrs?: Record<string, string>;
-  content?: (PostHTMLASTNode | string)[];
+export declare type ResponsiveAttributes = {
+  src: string;
+  width: string;
+  height: string;
+  srcset: string;
+  sizes?: string;
 };
 
-export declare type PostHTMLPlugin = (tree: PostHTMLASTNode) => void | PostHTMLASTNode;
-
-export declare function processImage(image: PostHTMLASTNode, options: ResponsiveImagePreset): PostHTMLASTNode;
-
-declare type posthtmlResponsiveImages = {
-  (options: ResponsiveImagesOptions): PostHTMLPlugin;
-  processImage: typeof processImage;
-};
-
-export default posthtmlResponsiveImages;
+export declare function generateResponsiveAttributes(
+  originalSrc: string,
+  originalWidth: number,
+  originalHeight: number,
+  preset: ResponsiveImagePreset,
+): ResponsiveAttributes;
