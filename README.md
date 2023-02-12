@@ -113,6 +113,19 @@ be replaced with the appropriate values. The available placeholders are:
 
 ## Programmatic usage
 
-The plugin exports the core `processImage` method, so if you have some special use-case
-which the plugin doesn't cover, you should be able to create your own plugin easily enough.
-The method accepts a PostHTML AST node as the first argument
+The plugin exports the core `generateResponsiveAttributes` function, so if you have some
+special use-case which the plugin doesn't cover, you should be able to create your own
+plugin easily enough. The function has the following signature:
+
+```typescript
+export function generateResponsiveAttributes(
+  originalSrc: string,
+  originalWidth: number,
+  originalHeight: number,
+  preset: ResponsiveImagePreset,
+): ResponsiveAttributes;
+```
+
+The returned value is an object with the `src`, `width`, `height`, `srcset`, and optional
+`sizes` properties. The `ResponsiveImagePreset` type conforms to what is described in the
+Configuration section, but it should have its `urlFormat` already resolved to a `string`.
