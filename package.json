@@ -1,0 +1,14 @@
+{
+  "name": "posthtml-responsive-images",
+  "version": "1.0.0",
+  "description": "PostHTML plugin which generates 'srcset' and 'sizes' attributes according to configured presets",
+  "keywords": [ "posthtml-plugin", "srcset", "sizes"],
+  "license": "MIT",
+  "homepage": "https://github.com/jahudka/posthtml-responsive-images",
+  "repository": { "type": "git", "url": "git+https://github.com/jahudka/posthtml-responsive-images.git" },
+  "author": { "name": "Dan Kadera", "email": "me@subsonic.cz", "url": "https://github.com/jahudka" },
+  "bugs": { "url": "https://github.com/jahudka/posthtml-responsive-images/issues" },
+  "files": ["lib"],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts"
+}
